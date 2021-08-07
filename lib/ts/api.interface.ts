@@ -14,15 +14,16 @@ export interface ApiParams {
   description?: string;
   version: string;
   permissions?: string[];
+  required_auth?: boolean;
   param?: any;
   rootPath?: string;
   controller(res: any, req: any, next?: any): any;
 }
 
 export interface ApiDictionary {
-  GET?: ApiParams[];
-  POST?: ApiParams[];
-  PUT?: ApiParams[];
-  PATCH?: ApiParams[];
-  DELETE?: ApiParams[];
+  GET: ApiParams[];
+  POST: ApiParams[];
+  PUT: ApiParams[];
+  PATCH: ApiParams[];
+  DELETE: ApiParams[];
 }

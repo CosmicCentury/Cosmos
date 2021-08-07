@@ -2,7 +2,7 @@ export default class ApiError extends Error {
   statusCode: number;
   isOperational: boolean;
   constructor(
-    statusCode: number,
+    statusCode: number = 500,
     message: string,
     isOperational: boolean = true,
     stack: string = ""

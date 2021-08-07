@@ -1,20 +1,24 @@
+import { StatusCodes } from "http-status-codes";
 import * as controller from "../controller";
+import BaseResponse from "../lib/classes/BaseResponse";
 import { ApiDictionary } from "../lib/ts/api.interface";
 
 const api: ApiDictionary = {
   GET: [
     {
-      name: "updateLoginTime",
-      description: "",
+      name: "user",
+      description: "get user information",
       version: "1",
+      required_auth: true,
       permissions: [],
-      param: "id",
-      controller: controller.updateLoginTime,
+      controller: controller.getUser,
     },
     {
-      name: "users",
+      name: "all",
+      rootPath: "user",
       description: "get all user information",
       version: "1",
+      required_auth: true,
       permissions: [],
       controller: controller.getAllUsers,
     },
@@ -22,10 +26,11 @@ const api: ApiDictionary = {
   POST: [
     {
       name: "user",
-      description: "create new user",
+      description: "retrieve a user",
       version: "1",
       permissions: [],
-      controller: controller.createNewUser,
+      controller: () =>
+        new BaseResponse(StatusCodes.NOT_IMPLEMENTED, "Nothing"),
     },
     {
       name: "authenticate",
@@ -35,8 +40,24 @@ const api: ApiDictionary = {
       permissions: [],
       controller: controller.authenticate,
     },
+    {
+      name: "register",
+      rootPath: "user",
+      description: "register new user",
+      version: "1",
+      controller: controller.register,
+    },
   ],
-  PUT: [],
+  PUT: [
+    {
+      name: "user",
+      description: "update a user",
+      version: "1",
+      required_auth: true,
+      permissions: [],
+      controller: controller.updateUser,
+    },
+  ],
   PATCH: [],
   DELETE: [],
 };

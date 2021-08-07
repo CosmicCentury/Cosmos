@@ -5,6 +5,7 @@ import ApiError from "./lib/classes/ApiError";
 import AuthenticatedResponse from "./lib/classes/AuthenticatedResponse";
 import BaseResponse from "./lib/classes/BaseResponse";
 import Routes from "./lib/classes/Routes";
+import jwt from "jsonwebtoken";
 
 const baseApi = "/api";
 
@@ -72,6 +73,7 @@ const buildApiRoutes = (apiArr: any) => {
     operations[apiName] = {
       description: v.description,
       permissions: v.permissions,
+      required_auth: v.required_auth,
       controller: v.controller,
     };
   }
@@ -110,41 +112,60 @@ const processRoute = async (router: any, operations: any, key: string) => {
   const lookup: any = {
     GET: () => {
       for (let i in operations) {
-        router.get(`${baseApi}/${i}`, async (req: any, res: any, next: any) =>
-          response(await operations[i].controller(req, res, next), res)
+        router.get(
+          `${baseApi}/${i}`,
+          async (req: any, res: any, next: any) =>
+            await prepocessResponse(req, res, next, operations[i])
         );
       }
     },
     POST: () => {
       for (let i in operations) {
-        router.post(`${baseApi}/${i}`, async (req: any, res: any, next: any) =>
-          response(await operations[i].controller(req, res, next), res)
+        router.post(
+          `${baseApi}/${i}`,
+          async (req: any, res: any, next: any) =>
+            await prepocessResponse(req, res, next, operations[i])
         );
       }
     },
     PUT: () => {
       for (let i in operations) {
-        router.put(`${baseApi}/${i}`, async (req: any, res: any) =>
-          response(await operations[i].controller(req, res), res)
+        router.put(
+          `${baseApi}/${i}`,
+          async (req: any, res: any, next: any) =>
+            await prepocessResponse(req, res, next, operations[i])
         );
       }
     },
     PATCH: () => {
       for (let i in operations) {
-        router.patch(`${baseApi}/${i}`, async (req: any, res: any) =>
-          response(await operations[i].controller(req, res), res)
+        router.patch(
+          `${baseApi}/${i}`,
+          async (req: any, res: any, next: any) =>
+            await prepocessResponse(req, res, next, operations[i])
         );
       }
     },
     DELETE: () => {
       for (let i in operations) {
-        router.delete(`${baseApi}/${i}`, async (req: any, res: any) =>
-          response(await operations[i].controller(req, res), res)
+        router.delete(
+          `${baseApi}/${i}`,
+          async (req: any, res: any, next: any) =>
+            await prepocessResponse(req, res, next, operations[i])
         );
       }
     },
   };
   lookup[key]();
+};
+
+const prepocessResponse = async (req, res, next, operation) => {
+  if (operation.required_auth) {
+    const result = jwt.verify(req.cookies.token, process.env.JWT_SECRET!);
+    req.userID = result["id"];
+  }
+
+  await response(await operation.controller(req, res, next), res);
 };
 
 const response = async (data: any, res: any) => {
