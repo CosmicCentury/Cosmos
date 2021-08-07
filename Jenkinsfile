@@ -8,12 +8,8 @@ pipeline {
     }
 
     stage('Stop and Remove') {
-      try{
-        steps {
-          bat 'docker stop server && docker rm server'
-        }
-      }catch(error){
-
+      steps {
+        bat 'docker stop server && docker rm server'
       }
     }
 
