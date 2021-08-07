@@ -1,4 +1,4 @@
-require("dotenv").config();
+import "dotenv/config";
 import { init } from "./config/express";
 
 const app = init();

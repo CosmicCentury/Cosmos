@@ -1,9 +1,10 @@
 export {};
 import express from "express";
 const { Router } = require("express");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import helmet from "helmet";
+import morgan from "morgan";
 import * as MainRouter from "../router";
 import ErrorMiddleware from "../middleware/errorHandler";
 
@@ -17,8 +18,30 @@ const router = Router();
 const init = () => {
   app.use(cors());
   app.use(cookieParser());
+  app.use(helmet());
+  app.use(morgan("combined"));
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
+
+  app.use((req, res, next) => {
+    // Request methods you wish to allow
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+    );
+
+    // Request headers you wish to allow
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Origin, x-access-token, X-Requested-With, Content-Type, Accept"
+    );
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+
+    next();
+  });
 
   app.use(MainRouter.preprocessRoutes(router));
 

@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 class User extends Model {
   public id!: number;
-  public username!: string;
+  public email!: string;
   public password!: string;
   public firstName!: string;
   public lastName!: string;
@@ -24,7 +24,7 @@ User.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    username: {
+    email: {
       type: new DataTypes.STRING(45),
       allowNull: false,
       unique: true,

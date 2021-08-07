@@ -2,6 +2,7 @@ export {};
 import fs from "fs";
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import ApiError from "./lib/classes/ApiError";
+import AuthenticatedResponse from "./lib/classes/AuthenticatedResponse";
 import BaseResponse from "./lib/classes/BaseResponse";
 import Routes from "./lib/classes/Routes";
 
@@ -149,6 +150,9 @@ const processRoute = async (router: any, operations: any, key: string) => {
 const response = async (data: any, res: any) => {
   if (data?.constructor?.name === BaseResponse.name) {
     res.status(data.statusCode).send(data.data);
+  }
+  if (data?.constructor?.name === AuthenticatedResponse.name) {
+    res.status(data.statusCode).send(data.token);
   }
 };
 
