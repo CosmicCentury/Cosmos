@@ -9,8 +9,12 @@ pipeline {
 
     stage('Run') {
       steps {
-        bat 'docker stop server && docker rm server'
-        bat 'docker run -d --name server -p 5000:5000 -t nodejs'
+        try{
+          bat 'docker stop server && docker rm server'
+        }catch(error){
+        }finally{
+          bat 'docker run -d --name server -p 5000:5000 -t nodejs'
+        }
       }
     }
 
