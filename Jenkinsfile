@@ -7,14 +7,19 @@ pipeline {
       }
     }
 
-    stage('Run') {
-      steps {
-        try{
+    stage('Stop and Remove') {
+      try{
+        steps {
           bat 'docker stop server && docker rm server'
-        }catch(error){
-        }finally{
-          bat 'docker run -d --name server -p 5000:5000 -t nodejs'
         }
+      }catch(error){
+
+      }
+    }
+
+    stage("Run") {
+      steps {
+        bat 'docker run -d --name server -p 5000:5000 -t nodejs'
       }
     }
 
