@@ -16,7 +16,7 @@ const router = Router();
  * @return {any} app
  */
 const init = () => {
-  app.use(cors());
+  app.use(cors({}));
   app.use(cookieParser());
   app.use(helmet());
   app.use(morgan("combined"));
@@ -24,6 +24,12 @@ const init = () => {
   app.use(express.json());
 
   app.use((req, res, next) => {
+    // Website you wish to allow to connect
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      "http://test.frontierviewer.com"
+    );
+
     // Request methods you wish to allow
     res.setHeader(
       "Access-Control-Allow-Methods",
@@ -38,7 +44,9 @@ const init = () => {
 
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
-    res.setHeader("Access-Control-Allow-Credentials", "true");
+
+    //@ts-expect-error
+    res.setHeader("Access-Control-Allow-Credentials", true);
 
     next();
   });
