@@ -16,7 +16,11 @@ const router = Router();
  * @return {any} app
  */
 const init = () => {
-  app.use(cors());
+  app.use(
+    cors({
+      origin: "http://test.frontierviewer.com/",
+    })
+  );
 
   app.disable("x-powered-by");
   app.enable("trust proxy");
