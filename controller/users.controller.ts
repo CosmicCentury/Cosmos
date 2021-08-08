@@ -48,10 +48,8 @@ const getAllUsers = async (req, res, next) => {
 const authenticate = async (req, res, next) => {
   try {
     const email = req.body.email.toLowerCase().trim();
-    console.log(email);
     const password = req.body.password;
     const user = await User.findOne({ where: { email } });
-    console.log(user);
     if (!user) {
       throw new ApiError(StatusCodes.NOT_FOUND, "Email not found");
     }
@@ -76,6 +74,7 @@ const authenticate = async (req, res, next) => {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      phoneNumber: user.phoneNumber,
     };
 
     const token = jwt.sign(userResults, process.env.JWT_SECRET!, {
@@ -96,7 +95,7 @@ const authenticate = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   try {
-    const { email, password, firstName, lastName } = req.body;
+    const { email, password, firstName, lastName, phoneNumber } = req.body;
 
     const isExistUer = await User.count({ where: { email: email } });
     if (isExistUer > 0) {
@@ -108,6 +107,7 @@ const register = async (req, res, next) => {
       password,
       firstName,
       lastName,
+      phoneNumber,
     });
 
     return new BaseResponse(StatusCodes.CREATED, user);
@@ -122,15 +122,12 @@ const register = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   try {
-    const { id, firstName, lastName, status } = req.body;
+    const { id, firstName, lastName, status, phoneNumber } = req.body;
 
     const user = await User.update(
-      { firstName, lastName, status },
+      { firstName, lastName, status, phoneNumber },
       { where: { id } }
     );
-
-    console.log(user);
-
     return new BaseResponse(StatusCodes.OK, "User updated");
   } catch (err) {
     if (err instanceof ValidationError) {

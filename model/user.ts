@@ -12,6 +12,7 @@ class User extends Model {
   public readonly createdAt!: Date;
   public loginAt!: Date;
   public status!: string;
+  public phoneNumber!: string;
   validatePassword!: (password: string, hash: string) => Promise<boolean>;
 
   // validatePassword(password: string): string;
@@ -35,19 +36,18 @@ User.init(
     },
     firstName: {
       type: new DataTypes.STRING(45),
-      allowNull: true,
     },
     lastName: {
       type: new DataTypes.STRING(45),
-      allowNull: true,
     },
     loginAt: {
       type: DataTypes.DATE,
-      allowNull: true,
     },
     status: {
       type: new DataTypes.STRING(1),
-      allowNull: true,
+    },
+    phoneNumber: {
+      type: new DataTypes.STRING(20),
     },
   },
   {
