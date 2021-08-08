@@ -18,7 +18,7 @@ const router = Router();
 const init = () => {
   app.use(
     cors({
-      origin: "http://test.frontierviewer.com/",
+      origin: "*",
     })
   );
 
@@ -33,10 +33,7 @@ const init = () => {
 
   app.use((req, res, next) => {
     // Website you wish to allow to connect
-    // res.setHeader(
-    //   "Access-Control-Allow-Origin",
-    //   "http://test.frontierviewer.com"
-    // );
+    res.setHeader("Access-Control-Allow-Origin", "*");
 
     // Request methods you wish to allow
     res.setHeader(
