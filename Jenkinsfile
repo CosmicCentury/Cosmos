@@ -1,23 +1,24 @@
 pipeline {
   agent any
   stages {
-    stage('Build') {
+    stage('Initialise and Run') {
       steps {
-        bat 'docker build -t nodejs .'
+        bat 'docker-compose down -v'
+        bat 'docker-compose up --build -d'
       }
     }
 
-    stage('Stop and Remove') {
-      steps {
-        bat 'docker stop server && docker rm server'
-      }
-    }
+    // stage('Stop and Remove') {
+    //   steps {
+    //     bat 'docker stop server && docker rm server'
+    //   }
+    // }
 
-    stage("Run") {
-      steps {
-        bat 'docker run -d --name server -p 5000:5000 -t nodejs'
-      }
-    }
+    // stage("Run") {
+    //   steps {
+    //     bat 'docker run -d --name server -p 5000:5000 -t nodejs'
+    //   }
+    // }
 
   }
 }
