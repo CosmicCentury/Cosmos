@@ -7,5 +7,20 @@ export interface AppointmentModel {
   allDay?: boolean;
   title: string;
   id?: number | string;
+  rRule?: string;
   exDate?: string;
+}
+
+export interface ResourceInstance {
+  id: number | string;
+  text?: string;
+  color?: string;
+}
+
+export interface Resource {
+  id: number | string;
+  fieldName: string;
+  instances: ResourceInstance;
+  title?: string;
+  allowMultiple?: boolean;
 }
