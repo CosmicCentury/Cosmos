@@ -1,16 +1,30 @@
 import dayjs from "dayjs";
 import { StatusCodes } from "http-status-codes";
-import ApiError from "../lib/classes/ApiError";
 import BaseResponse from "../lib/classes/BaseResponse";
-import AuthenticatedResponse from "../lib/classes/AuthenticatedResponse";
-import { IUserResults } from "../lib/ts/user.interface";
-import { ValidationError } from "sequelize";
-import User from "../model/user";
-import jwt from "jsonwebtoken";
-import { newTest } from "../index";
 
-export { latest };
+export { testApi };
 
-const latest = async (req, res, next) => {
-  console.log(newTest);
+const testApi = (req: any, res: any, next: any) => {
+  //   console.log(getRoute());
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+  });
+  return sendAndSleep(res, 5);
+
+  //   const newData = "hi";
+  //   return new BaseResponse(StatusCodes.OK, newData);
+};
+var sendAndSleep = function (response, counter) {
+  if (counter > 10) {
+    response.end();
+  } else {
+    response.write(" ;i=" + counter);
+    console.log(counter);
+    counter++;
+    setTimeout(function () {
+      sendAndSleep(response, counter);
+    }, 1000);
+  }
 };

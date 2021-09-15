@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/dbManager";
 import bcrypt from "bcrypt";
+import UserRole from "./userRole";
 
 class User extends Model {
   public id!: number;
@@ -14,7 +15,6 @@ class User extends Model {
   public status!: string;
   public phoneNumber!: string;
   validatePassword!: (password: string, hash: string) => Promise<boolean>;
-
   // validatePassword(password: string): string;
 }
 
@@ -51,7 +51,7 @@ User.init(
     },
   },
   {
-    modelName: "users",
+    tableName: "users",
     sequelize,
     hooks: {
       beforeCreate: async (user) => {

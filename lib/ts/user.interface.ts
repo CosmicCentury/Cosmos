@@ -5,3 +5,10 @@ export interface IUserResults {
   lastName: string;
   phoneNumber: string;
 }
+
+export interface IUsersPaginationDetails {
+  page: number;
+  size: number;
+  filter?: string;
+  sort?: string;
+}

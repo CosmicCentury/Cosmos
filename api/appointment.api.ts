@@ -9,7 +9,7 @@ const api: ApiDictionary = {
       name: "appointments",
       description: "get current view appointment",
       version: "1",
-      permissions: [],
+      roles: [],
       controller: controller.getAppointments,
     },
   ],

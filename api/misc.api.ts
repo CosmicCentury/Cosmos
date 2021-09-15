@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import * as controller from "../controller";
 import BaseResponse from "../lib/classes/BaseResponse";
 import { ApiDictionary } from "../lib/ts/api.interface";
 import { routes } from "../router";
@@ -9,14 +10,14 @@ const api: ApiDictionary = {
       name: "route",
       description: "get all API routes",
       version: "1",
-      permissions: [],
+      roles: [],
       controller: () => new BaseResponse(StatusCodes.OK, routes.getObj()),
     },
     {
       name: "get",
       description: "get all GET routes",
       version: "1",
-      permissions: [],
+      roles: [],
       rootPath: "route",
       controller: () =>
         new BaseResponse(StatusCodes.OK, routes.retrieveGetRoutes()),
@@ -25,7 +26,7 @@ const api: ApiDictionary = {
       name: "post",
       description: "get all POST routes",
       version: "1",
-      permissions: [],
+      roles: [],
       rootPath: "route",
       controller: () =>
         new BaseResponse(StatusCodes.OK, routes.retrievePostRoutes()),
@@ -34,7 +35,7 @@ const api: ApiDictionary = {
       name: "put",
       description: "get all PUT routes",
       version: "1",
-      permissions: [],
+      roles: [],
       rootPath: "route",
       controller: () =>
         new BaseResponse(StatusCodes.OK, routes.retrievePutRoutes()),
@@ -43,7 +44,7 @@ const api: ApiDictionary = {
       name: "patch",
       description: "get all PATCH routes",
       version: "1",
-      permissions: [],
+      roles: [],
       rootPath: "route",
       controller: () =>
         new BaseResponse(StatusCodes.OK, routes.retrievePatchRoutes()),
@@ -52,10 +53,17 @@ const api: ApiDictionary = {
       name: "delete",
       description: "get all DELETE routes",
       version: "1",
-      permissions: [],
+      roles: [],
       rootPath: "route",
       controller: () =>
         new BaseResponse(StatusCodes.OK, routes.retrieveDeleteRoutes()),
+    },
+    {
+      name: "test",
+      description: "get all API routes",
+      version: "1",
+      roles: [],
+      controller: controller.testApi,
     },
   ],
   POST: [],

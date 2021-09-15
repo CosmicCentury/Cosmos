@@ -1,19 +1,21 @@
-// export interface ApiResponse {}
+import { Request, Response, NextFunction } from "express";
+import { ClassElement } from "typescript";
 
-export interface ControllerParams {
-  /** request params */
-  req: any;
-  /** response params (optional) */
-  res?: any;
-  /** error handling */
-  next?: any;
+export interface TRequest extends Request {
+  userID: string;
+}
+
+export interface TData extends ClassElement {
+  statusCode: number;
+  data: any;
+  token: string;
 }
 
 export interface ApiParams {
   name: string;
   description?: string;
   version: string;
-  permissions?: string[];
+  roles?: string[];
   required_auth?: boolean;
   param?: any;
   rootPath?: string;
@@ -21,9 +23,13 @@ export interface ApiParams {
 }
 
 export interface ApiDictionary {
-  GET: ApiParams[];
-  POST: ApiParams[];
-  PUT: ApiParams[];
-  PATCH: ApiParams[];
-  DELETE: ApiParams[];
+  GET?: ApiParams[];
+  POST?: ApiParams[];
+  PUT?: ApiParams[];
+  PATCH?: ApiParams[];
+  DELETE?: ApiParams[];
+}
+
+export interface ExpressHandler {
+  (req: TRequest, res: Response, next: NextFunction): any;
 }

@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import * as controller from "../controller";
 import BaseResponse from "../lib/classes/BaseResponse";
+import { ROLES } from "../lib/constants/roles.constants";
 import { ApiDictionary } from "../lib/ts/api.interface";
 
 const api: ApiDictionary = {
@@ -10,16 +11,15 @@ const api: ApiDictionary = {
       description: "get user information",
       version: "1",
       required_auth: true,
-      permissions: [],
+      roles: [],
       controller: controller.getUser,
     },
     {
-      name: "all",
-      rootPath: "user",
-      description: "get all user information",
+      name: "users",
+      description: "get all users information",
       version: "1",
       required_auth: true,
-      permissions: [],
+      roles: [ROLES.SUPERADMIN, ROLES.ADMIN],
       controller: controller.getAllUsers,
     },
   ],
@@ -28,7 +28,6 @@ const api: ApiDictionary = {
       name: "user",
       description: "retrieve a user",
       version: "1",
-      permissions: [],
       controller: () =>
         new BaseResponse(StatusCodes.NOT_IMPLEMENTED, "Nothing"),
     },
@@ -37,7 +36,6 @@ const api: ApiDictionary = {
       rootPath: "user",
       description: "auth user for logging in",
       version: "1",
-      permissions: [],
       controller: controller.authenticate,
     },
     {
@@ -54,8 +52,35 @@ const api: ApiDictionary = {
       description: "update a user",
       version: "1",
       required_auth: true,
-      permissions: [],
+      roles: [],
       controller: controller.updateUser,
+    },
+    {
+      name: "password",
+      description: "update password",
+      version: "1",
+      required_auth: true,
+      rootPath: "user",
+      roles: [ROLES.SUPERADMIN, ROLES.ADMIN],
+      controller: controller.changePassword,
+    },
+    {
+      name: "reset",
+      description: "reset password",
+      version: "1",
+      required_auth: true,
+      rootPath: "password",
+      roles: [ROLES.SUPERADMIN, ROLES.ADMIN],
+      controller: controller.resetPassword,
+    },
+    {
+      name: "role",
+      description: "update role",
+      version: "1",
+      required_auth: true,
+      rootPath: "user",
+      roles: [ROLES.SUPERADMIN, ROLES.ADMIN],
+      controller: controller.updateUserRole,
     },
   ],
   PATCH: [],

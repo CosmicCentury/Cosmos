@@ -1,4 +1,3 @@
-export {};
 import fs from "fs";
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import ApiError from "./lib/classes/ApiError";
@@ -6,6 +5,18 @@ import AuthenticatedResponse from "./lib/classes/AuthenticatedResponse";
 import BaseResponse from "./lib/classes/BaseResponse";
 import Routes from "./lib/classes/Routes";
 import jwt from "jsonwebtoken";
+import MediaResponse from "./lib/classes/MediaResponse";
+import { Request, Response, NextFunction, IRouter } from "express";
+import path from "path";
+import {
+  ApiDictionary,
+  ApiParams,
+  TData,
+  TRequest,
+} from "./lib/ts/api.interface";
+import User from "./model/user";
+import UserRole from "./model/userRole";
+import Roles from "./model/roles";
 
 const baseApi = "/api";
 
@@ -24,7 +35,7 @@ let operations = {
  * @param router
  * @returns
  */
-const preprocessRoutes = (router: any) => {
+const preprocessRoutes = (router: IRouter) => {
   // get api directory
 
   const apiDir = fs.readdirSync(`${__dirname}/api`);
@@ -63,7 +74,7 @@ const preprocessRoutes = (router: any) => {
   return router;
 };
 
-const buildApiRoutes = (apiArr: any) => {
+const buildApiRoutes = (apiArr: ApiParams[]) => {
   let operations: any = {};
 
   // build api with versions first
@@ -72,7 +83,7 @@ const buildApiRoutes = (apiArr: any) => {
 
     operations[apiName] = {
       description: v.description,
-      permissions: v.permissions,
+      roles: v.roles,
       required_auth: v.required_auth,
       controller: v.controller,
     };
@@ -81,7 +92,7 @@ const buildApiRoutes = (apiArr: any) => {
   return operations;
 };
 
-const searchApiName = (v: any, arr: any): any => {
+const searchApiName = (v: ApiParams, arr: ApiParams[]): any => {
   if (arr.length < 1) {
     return v;
   }
@@ -102,19 +113,23 @@ const searchApiName = (v: any, arr: any): any => {
       : searchApiName(nV[0], arr) + `/${v.name}`;
   }
 };
-const searchNewPath = (path: string, version: any, arr: any) => {
+const searchNewPath = (path: string, version: string, arr: ApiParams[]) => {
   return arr.filter(
     (item: any) => item.name === path && item.version === version
   );
 };
 
-const processRoute = async (router: any, operations: any, key: string) => {
+const processRoute = async (
+  router: any,
+  operations: ApiDictionary,
+  key: string
+) => {
   const lookup: any = {
     GET: () => {
       for (let i in operations) {
         router.get(
           `${baseApi}/${i}`,
-          async (req: any, res: any, next: any) =>
+          async (req: TRequest, res: Response, next: NextFunction) =>
             await prepocessResponse(req, res, next, operations[i])
         );
       }
@@ -123,7 +138,7 @@ const processRoute = async (router: any, operations: any, key: string) => {
       for (let i in operations) {
         router.post(
           `${baseApi}/${i}`,
-          async (req: any, res: any, next: any) =>
+          async (req: TRequest, res: Response, next: NextFunction) =>
             await prepocessResponse(req, res, next, operations[i])
         );
       }
@@ -132,7 +147,7 @@ const processRoute = async (router: any, operations: any, key: string) => {
       for (let i in operations) {
         router.put(
           `${baseApi}/${i}`,
-          async (req: any, res: any, next: any) =>
+          async (req: TRequest, res: Response, next: NextFunction) =>
             await prepocessResponse(req, res, next, operations[i])
         );
       }
@@ -141,7 +156,7 @@ const processRoute = async (router: any, operations: any, key: string) => {
       for (let i in operations) {
         router.patch(
           `${baseApi}/${i}`,
-          async (req: any, res: any, next: any) =>
+          async (req: TRequest, res: Response, next: NextFunction) =>
             await prepocessResponse(req, res, next, operations[i])
         );
       }
@@ -150,7 +165,7 @@ const processRoute = async (router: any, operations: any, key: string) => {
       for (let i in operations) {
         router.delete(
           `${baseApi}/${i}`,
-          async (req: any, res: any, next: any) =>
+          async (req: TRequest, res: Response, next: NextFunction) =>
             await prepocessResponse(req, res, next, operations[i])
         );
       }
@@ -159,21 +174,65 @@ const processRoute = async (router: any, operations: any, key: string) => {
   lookup[key]();
 };
 
-const prepocessResponse = async (req, res, next, operation) => {
-  if (operation.required_auth) {
-    const result = jwt.verify(req.cookies.token, process.env.JWT_SECRET!);
-    req.userID = result["id"];
-  }
+const prepocessResponse = async (
+  req: TRequest,
+  res: Response,
+  next: NextFunction,
+  operation: ApiParams
+) => {
+  try {
+    if (operation.required_auth) {
+      const result = jwt.verify(req.cookies.token, process.env.JWT_SECRET!);
+      req.userID = result["id"];
+    }
+    if (operation.roles && operation.roles.length > 0) {
+      if (!req.userID) {
+        throw new ApiError(StatusCodes.UNAUTHORIZED, "User not authenticated");
+      }
+      const _user = await User.findOne({
+        where: { id: req.userID },
+        include: [
+          {
+            model: UserRole,
+            required: true,
+            subQuery: false,
+            include: [
+              {
+                model: Roles,
+                required: true,
+                subQuery: false,
+              },
+            ],
+          },
+        ],
+      });
 
-  await response(await operation.controller(req, res, next), res);
+      const _userRole = _user?.getDataValue("UserRole");
+      const _role = _userRole?.getDataValue("Role");
+
+      const isCorrectRole = operation.roles.some((x) => x === _role.name);
+      if (!isCorrectRole) {
+        throw new ApiError(
+          StatusCodes.UNAUTHORIZED,
+          "No permission to execute this api"
+        );
+      }
+    }
+    await response(await operation.controller(req, res, next), res);
+  } catch (err: any) {
+    next(err);
+  }
 };
 
-const response = async (data: any, res: any) => {
+const response = async (data: TData, res: Response) => {
   if (data?.constructor?.name === BaseResponse.name) {
     res.status(data.statusCode).send(data.data);
   }
   if (data?.constructor?.name === AuthenticatedResponse.name) {
     res.status(data.statusCode).send(data.token);
+  }
+  if (data?.constructor?.name === MediaResponse.name) {
+    res.download(data.data);
   }
 };
 
