@@ -29,7 +29,7 @@ jobs:
       # - name: Build and push Docker image
       #   uses: docker/build-push-action@v2
       #   with:
-      #     # Replace 'yourusername/yourrepository' with your DockerHub username and repository name
+      #     # Replace 'yourusername/yourrepository' with your DockerHub username and repository names
       #     push: true
       #     tags: raphaelvguy/nebula:latest
       #     platforms: linux/amd64, linux/arm64 s
