@@ -1,7 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/dbManager";
 import bcrypt from "bcrypt";
-import UserRole from "./userRole";
 
 class User extends Model {
   public id!: number;
@@ -51,7 +50,7 @@ User.init(
     },
   },
   {
-    tableName: "users",
+    modelName: "users",
     sequelize,
     hooks: {
       beforeCreate: async (user) => {

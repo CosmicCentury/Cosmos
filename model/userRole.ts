@@ -19,15 +19,16 @@ UserRole.init(
       primaryKey: true,
     },
     roleId: {
-      type: new DataTypes.STRING(45),
+      type: DataTypes.INTEGER,
     },
     userId: {
-      type: new DataTypes.STRING(45),
+      type: DataTypes.INTEGER,
     },
   },
   {
-    tableName: "user_role",
-    sequelize,
+    modelName: "user_role",
+    sequelize: sequelize,
+    timestamps: false,
   }
 );
 

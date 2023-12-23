@@ -23,7 +23,7 @@ Roles.init(
     },
   },
   {
-    tableName: "roles",
+    modelName: "roles",
     sequelize,
   }
 );
