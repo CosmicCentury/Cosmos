@@ -1,15 +1,15 @@
-FROM node:latest
+FROM node:20.10.0 as builder
 
-WORKDIR /app
+WORKDIR /source
 
-COPY package.json /app
+COPY package.json /source
 
-RUN yarn install
+COPY package-lock.json /source
 
-COPY . /app/
+RUN npm ci
+
+COPY . /source/
 
 EXPOSE 5000
 
-RUN yarn run tsc
-
-ENTRYPOINT ["yarn","start"]
+CMD [ "npm","run" ,"start"]

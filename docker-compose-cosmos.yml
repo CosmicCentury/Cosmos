@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  cosmos:
+    restart: always
+    image: raphaelvguy/cosmos:latest
+    environment:
+      - TZ=Asia/Singapore
+    ports:
+      - "5000:5000"
+    expose:
+      - "5000"
