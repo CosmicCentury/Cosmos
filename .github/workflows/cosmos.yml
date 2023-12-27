@@ -32,7 +32,7 @@ jobs:
           # Replace 'yourusername/yourrepository' with your DockerHub username and repository names
           push: true
           tags: raphaelvguy/cosmos:latest
-          platforms: linux/amd64, linux/arm64 s
+          platforms: linux/amd64, linux/arm64
   deploy:
     runs-on: self-hosted
     needs: build
