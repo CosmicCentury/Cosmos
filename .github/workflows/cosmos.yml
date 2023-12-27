@@ -1,4 +1,4 @@
-name: Deploy Cosmos app
+name: Deploy Cosmos App
 on:
   push:
     branches: ["main"]
