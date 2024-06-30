@@ -14,7 +14,7 @@ export interface TData extends ClassElement {
 export interface ApiParams {
   name: string;
   description?: string;
-  version: string;
+  version: number;
   roles?: string[];
   required_auth?: boolean;
   param?: any;

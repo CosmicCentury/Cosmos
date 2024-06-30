@@ -113,7 +113,7 @@ const searchApiName = (v: ApiParams, arr: ApiParams[]): any => {
       : searchApiName(nV[0], arr) + `/${v.name}`;
   }
 };
-const searchNewPath = (path: string, version: string, arr: ApiParams[]) => {
+const searchNewPath = (path: string, version: number, arr: ApiParams[]) => {
   return arr.filter(
     (item: any) => item.name === path && item.version === version
   );

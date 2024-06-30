@@ -9,14 +9,14 @@ const api: ApiDictionary = {
     {
       name: "file",
       description: "download file",
-      version: "1",
+      version: 1,
       roles: [],
       controller: controller.downloadFile,
     },
     {
       name: "website",
       description: "scrape website (custom)",
-      version: "1",
+      version: 1,
       roles: [],
       rootPath: "file",
       controller: controller.scrapeWebsiteVideo,

@@ -9,7 +9,7 @@ const api: ApiDictionary = {
     {
       name: "tracker",
       description: "get stock tracker",
-      version: "1",
+      version: 1,
       roles: [],
       controller: () =>
         new BaseResponse(StatusCodes.NOT_IMPLEMENTED, "Not Implemented"),
@@ -20,7 +20,7 @@ const api: ApiDictionary = {
       rootPath: "tracker",
       controller: controller.tracker,
       roles: [],
-      version: "1",
+      version: 1,
       param: "name",
     },
   ],

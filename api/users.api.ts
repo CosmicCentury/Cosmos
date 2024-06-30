@@ -9,7 +9,7 @@ const api: ApiDictionary = {
     {
       name: "user",
       description: "get user information",
-      version: "1",
+      version: 1,
       required_auth: true,
       roles: [],
       controller: controller.getUser,
@@ -17,7 +17,7 @@ const api: ApiDictionary = {
     {
       name: "users",
       description: "get all users information",
-      version: "1",
+      version: 1,
       required_auth: true,
       roles: [ROLES.SUPERADMIN, ROLES.ADMIN],
       controller: controller.getAllUsers,
@@ -25,7 +25,7 @@ const api: ApiDictionary = {
     {
       name: "roles",
       description: "get all roles",
-      version: "1",
+      version: 1,
       required_auth: true,
       roles: [ROLES.SUPERADMIN, ROLES.ADMIN],
       controller: controller.getroles,
@@ -35,7 +35,7 @@ const api: ApiDictionary = {
     {
       name: "user",
       description: "retrieve a user",
-      version: "1",
+      version: 1,
       controller: () =>
         new BaseResponse(StatusCodes.NOT_IMPLEMENTED, "Nothing"),
     },
@@ -43,14 +43,14 @@ const api: ApiDictionary = {
       name: "authenticate",
       rootPath: "user",
       description: "auth user for logging in",
-      version: "1",
+      version: 1,
       controller: controller.authenticate,
     },
     {
       name: "register",
       rootPath: "user",
       description: "register new user",
-      version: "1",
+      version: 1,
       controller: controller.register,
     },
   ],
@@ -58,7 +58,7 @@ const api: ApiDictionary = {
     {
       name: "user",
       description: "update a user",
-      version: "1",
+      version: 1,
       required_auth: true,
       roles: [],
       controller: controller.updateUser,
@@ -66,7 +66,7 @@ const api: ApiDictionary = {
     {
       name: "password",
       description: "update password",
-      version: "1",
+      version: 1,
       required_auth: true,
       rootPath: "user",
       roles: [ROLES.SUPERADMIN, ROLES.ADMIN],
@@ -75,7 +75,7 @@ const api: ApiDictionary = {
     {
       name: "reset",
       description: "reset password",
-      version: "1",
+      version: 1,
       required_auth: true,
       rootPath: "password",
       roles: [ROLES.SUPERADMIN, ROLES.ADMIN],
@@ -84,7 +84,7 @@ const api: ApiDictionary = {
     {
       name: "role",
       description: "update role",
-      version: "1",
+      version: 1,
       required_auth: true,
       rootPath: "user",
       roles: [ROLES.SUPERADMIN, ROLES.ADMIN],
