@@ -183,8 +183,10 @@ const prepocessResponse = async (
   try {
     if (operation.required_auth) {
       const result = jwt.verify(req.cookies.token, process.env.JWT_SECRET!);
+      console.log(result);
       req.userID = result["id"];
     }
+
     if (operation.roles && operation.roles.length > 0) {
       if (!req.userID) {
         throw new ApiError(StatusCodes.UNAUTHORIZED, "User not authenticated");
@@ -207,10 +209,12 @@ const prepocessResponse = async (
         ],
       });
 
-      const _userRole = _user?.getDataValue("UserRole");
-      const _role = _userRole?.getDataValue("Role");
-
+      const _userRole = _user?.getDataValue("user_role");
+      const _role = _userRole?.getDataValue("role");
+      console.log(_userRole);
+      console.log(_role);
       const isCorrectRole = operation.roles.some((x) => x === _role.name);
+      console.log(isCorrectRole);
       if (!isCorrectRole) {
         throw new ApiError(
           StatusCodes.UNAUTHORIZED,

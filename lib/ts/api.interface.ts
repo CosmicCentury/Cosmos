@@ -30,6 +30,9 @@ export interface ApiDictionary {
   DELETE?: ApiParams[];
 }
 
-export interface ExpressHandler {
-  (req: TRequest, res: Response, next: NextFunction): any;
+export interface ExpressHandler<
+  TRequest extends Request = Request,
+  TResponse extends Response = Response
+> {
+  (req: TRequest, res: TResponse, next: NextFunction): any;
 }

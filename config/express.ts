@@ -15,7 +15,7 @@ const router = Router();
  * @function init
  * @return {any} app
  */
-const init = () => {
+const init = async () => {
   app.use(
     cors({
       origin: "*",
@@ -56,7 +56,7 @@ const init = () => {
     next();
   });
 
-  app.use(MainRouter.preprocessRoutes(router));
+  await app.use(MainRouter.preprocessRoutes(router));
 
   app.use(ErrorMiddleware);
   return app;

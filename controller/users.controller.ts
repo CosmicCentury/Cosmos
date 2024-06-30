@@ -12,6 +12,7 @@ import User from "../model/user";
 import jwt from "jsonwebtoken";
 import { ExpressHandler } from "../lib/ts/api.interface";
 import { getPagination, getPagingData } from "../utils/general";
+import Roles from "../model/roles";
 
 export {
   createNewUser,
@@ -22,7 +23,18 @@ export {
   getUser,
   changePassword,
   resetPassword,
+  getroles,
   updateUserRole,
+};
+
+const getroles: ExpressHandler = async (req, res, next) => {
+  try {
+    const roles = await Roles.findAll();
+
+    return new BaseResponse(StatusCodes.ACCEPTED, roles);
+  } catch (err) {
+    throw new ApiError(StatusCodes.CONFLICT, (err as Error).message);
+  }
 };
 
 const createNewUser: ExpressHandler = async (req, res, next) => {
@@ -61,6 +73,8 @@ const getAllUsers: ExpressHandler = async (req, res, next) => {
             },
           }
         : {};
+
+    console.log(isFilterExist);
 
     const users = await User.findAndCountAll({
       where: isFilterExist,
@@ -139,6 +153,7 @@ const register: ExpressHandler = async (req, res, next) => {
       firstName,
       lastName,
       phoneNumber,
+      status: "A",
     });
 
     return new BaseResponse(StatusCodes.CREATED, user);

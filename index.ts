@@ -1,15 +1,33 @@
-import "dotenv/config";
-import { init } from "./config/express";
+import dotenv from "dotenv";
+dotenv.config();
 
-const app = init();
+import { init as appInit } from "./config/express";
+// import { init as dbInit } from "./config/dbManager";
+// import JoinSavings from "./model/jointSavings";
+// import Tbills from "./model/tbills";
+// import User from "./model/user";
+// import UserRole from "./model/userRole";
+// import Roles from "./model/roles";
+// import seedDatabase from "./seed";
 
-require("./config/dbManager").init();
+// dbInit().then(async () => {
+//   await User.sync();
+//   await UserRole.sync();
+//   await Roles.sync();
+//   await JoinSavings.sync();
+//   await Tbills.sync();
+//   if (process.env.NODE_ENV === "development") {
+//     await seedDatabase();
+//   }
+// });
 
-app.listen(process.env.PORT, () => {
-  console.info(
-    `App is listening at http//${process.env.HOST}:${process.env.PORT}`
-  );
-});
+appInit().then((app) =>
+  app.listen(process.env.PORT, () => {
+    console.info(
+      `App is listening at http//${process.env.HOST}:${process.env.PORT}`
+    );
+  })
+);
 
 process
   .on("unhandledRejection", (reason, promise) => {

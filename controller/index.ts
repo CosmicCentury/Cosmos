@@ -4,3 +4,4 @@ export * from "./users.controller";
 export * from "./appointment.controller";
 export * from "./test.controller";
 export * from "./media.controller";
+export * from "./finance.controller";

@@ -22,6 +22,14 @@ const api: ApiDictionary = {
       roles: [ROLES.SUPERADMIN, ROLES.ADMIN],
       controller: controller.getAllUsers,
     },
+    {
+      name: "roles",
+      description: "get all roles",
+      version: "1",
+      required_auth: true,
+      roles: [ROLES.SUPERADMIN, ROLES.ADMIN],
+      controller: controller.getroles,
+    },
   ],
   POST: [
     {

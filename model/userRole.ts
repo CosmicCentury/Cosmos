@@ -2,13 +2,12 @@ import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/dbManager";
 import Roles from "./roles";
 import User from "./user";
+import { UserRoleType } from "./typings";
 
-class UserRole extends Model {
+class UserRole extends Model implements UserRoleType {
   public id!: number;
-  public roleId!: string;
-  public userId!: string;
-  public readonly updatedAt!: Date;
-  public readonly createdAt!: Date;
+  public roleId!: number;
+  public userId!: number;
 }
 
 UserRole.init(
@@ -28,7 +27,6 @@ UserRole.init(
   {
     modelName: "user_role",
     sequelize: sequelize,
-    timestamps: false,
   }
 );
 

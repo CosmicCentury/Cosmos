@@ -1,12 +1,11 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, ModelAttributes } from "sequelize";
 import { sequelize } from "../config/dbManager";
 import bcrypt from "bcrypt";
+import { RolesType } from "./typings";
 
-class Roles extends Model {
+class Roles extends Model implements RolesType {
   public id!: number;
   public name!: string;
-  public readonly updatedAt!: Date;
-  public readonly createdAt!: Date;
 }
 
 Roles.init(

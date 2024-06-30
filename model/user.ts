@@ -2,14 +2,19 @@ import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/dbManager";
 import bcrypt from "bcrypt";
 
-class User extends Model {
+type UserType = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+};
+
+class User extends Model implements UserType {
   public id!: number;
   public email!: string;
   public password!: string;
   public firstName!: string;
   public lastName!: string;
-  public readonly updatedAt!: Date;
-  public readonly createdAt!: Date;
   public loginAt!: Date;
   public status!: string;
   public phoneNumber!: string;
