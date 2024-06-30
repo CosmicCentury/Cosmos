@@ -31,19 +31,23 @@ const tracker: ExpressHandler<TrackerInterface> = async (req, res, next) => {
 
     const tableHead = await pageManager.extractTableText(
       "#tradeTable",
-      "thead"
+      "thead",
+      true,
+      "textContent"
     );
 
     const tableBody = await pageManager.extractTableText(
       "#tradeTable",
-      "tbody"
+      "tbody",
+      true,
+      "innerText"
     );
 
     const responseBody = {
-      head: tableHead,
+      head: tableHead?.flat(),
       body: tableBody,
     };
-    return new BaseResponse(StatusCodes.CREATED, responseBody);
+    return new BaseResponse(StatusCodes.OK, responseBody);
   } catch (err) {
     throw new ApiError(
       StatusCodes.INTERNAL_SERVER_ERROR,
