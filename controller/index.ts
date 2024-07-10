@@ -5,3 +5,4 @@ export * from "./appointment.controller";
 export * from "./test.controller";
 export * from "./media.controller";
 export * from "./finance.controller";
+export * from "./notion.controller";

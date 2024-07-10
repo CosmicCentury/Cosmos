@@ -7,12 +7,16 @@ import { routes } from "../router";
 const api: ApiDictionary = {
   GET: [
     {
+      name: "politicians",
+      description: "get top 10 politicians",
+      version: 1,
+      controller: controller.getTopPoliticians,
+    },
+    {
       name: "tracker",
       description: "get stock tracker",
       version: 1,
       roles: [],
-      controller: () =>
-        new BaseResponse(StatusCodes.NOT_IMPLEMENTED, "Not Implemented"),
     },
     {
       name: "politician",
@@ -22,6 +26,13 @@ const api: ApiDictionary = {
       roles: [],
       version: 1,
       param: "name",
+    },
+    {
+      name: "holdings",
+      description: "get top holdings of index fund/etf",
+      version: 1,
+      controller: controller.getHoldings,
+      param: "stock",
     },
   ],
   POST: [],

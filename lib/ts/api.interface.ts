@@ -19,7 +19,10 @@ export interface ApiParams {
   required_auth?: boolean;
   param?: any;
   rootPath?: string;
-  controller(res: any, req: any, next?: any): any;
+  options?: {
+    sse: boolean;
+  };
+  controller?(res: any, req: any, next?: any): any;
 }
 
 export interface ApiDictionary {

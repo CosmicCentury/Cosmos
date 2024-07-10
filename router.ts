@@ -7,7 +7,7 @@ import Routes from "./lib/classes/Routes";
 import jwt from "jsonwebtoken";
 import MediaResponse from "./lib/classes/MediaResponse";
 import { Request, Response, NextFunction, IRouter } from "express";
-import path from "path";
+
 import {
   ApiDictionary,
   ApiParams,
@@ -21,6 +21,26 @@ import Roles from "./model/roles";
 const baseApi = "/api";
 
 const routes = new Routes();
+
+type OperationsType = {
+  GET: OperationPropertyType;
+  POST: OperationPropertyType;
+  PUT: OperationPropertyType;
+  PATCH: OperationPropertyType;
+  DELETE: OperationPropertyType;
+};
+
+type OperationPropertyType = {
+  name: string;
+  rootPath: string;
+  description: string;
+  roles: string[];
+  required_auth: boolean;
+  options: {
+    sse: boolean;
+  };
+  controller: (req: TRequest, res: Response, next: NextFunction) => TData;
+};
 
 let operations = {
   GET: {},
@@ -75,17 +95,32 @@ const preprocessRoutes = (router: IRouter) => {
 };
 
 const buildApiRoutes = (apiArr: ApiParams[]) => {
-  let operations: any = {};
+  let operations: Partial<OperationsType> = {};
 
   // build api with versions first
   for (let v of apiArr) {
     const apiName = searchApiName(v, apiArr);
 
+    if (operations[apiName]) {
+      throw new Error(`Duplicate API names: ${apiName}`);
+    }
+
     operations[apiName] = {
+      name: v.name,
+      rootPath: v.rootPath,
       description: v.description,
       roles: v.roles,
-      required_auth: v.required_auth,
-      controller: v.controller,
+      required_auth: v.required_auth ?? false,
+      options: {
+        sse: v.options?.sse ?? false,
+      },
+      controller:
+        v.controller ??
+        (() =>
+          new BaseResponse(
+            StatusCodes.NOT_IMPLEMENTED,
+            `API Name: ${v.name} is not implemented`
+          )),
     };
   }
 
@@ -105,7 +140,7 @@ const searchApiName = (v: ApiParams, arr: ApiParams[]): any => {
   if (v.rootPath) {
     let nV = searchNewPath(v.rootPath, v.version, arr);
     if (nV.length < 1) {
-      throw new Error("Api version mismatched");
+      throw new Error(`API version mismatched: ${v.name}`);
     }
 
     return v.param
@@ -178,7 +213,7 @@ const prepocessResponse = async (
   req: TRequest,
   res: Response,
   next: NextFunction,
-  operation: ApiParams
+  operation: OperationPropertyType
 ) => {
   try {
     if (operation.required_auth) {
@@ -222,6 +257,13 @@ const prepocessResponse = async (
         );
       }
     }
+    console.log(operation);
+    if (operation.options.sse) {
+      res.setHeader("Content-Type", "text/event-stream");
+      res.setHeader("Cache-Control", "no-cache");
+      res.setHeader("Connection", "keep-alive");
+    }
+
     await response(await operation.controller(req, res, next), res);
   } catch (err: any) {
     next(err);

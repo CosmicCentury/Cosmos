@@ -36,8 +36,6 @@ const api: ApiDictionary = {
       name: "user",
       description: "retrieve a user",
       version: 1,
-      controller: () =>
-        new BaseResponse(StatusCodes.NOT_IMPLEMENTED, "Nothing"),
     },
     {
       name: "authenticate",

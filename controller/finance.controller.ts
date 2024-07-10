@@ -58,4 +58,24 @@ const tracker: ExpressHandler<TrackerInterface> = async (req, res, next) => {
   }
 };
 
-export { tracker };
+const getTopPoliticians: ExpressHandler = async (req, res, next) => {
+  const politicianNames = [
+    "Brian Higgins",
+    "Mark Green",
+    "Garret Graves",
+    "David Rouzer",
+    "Seth Moulton",
+    "Nancy Pelosi",
+    "Ron Wyden",
+    "John Rutherford",
+    "Richard Blumenthal",
+    "Pete Sessions",
+  ];
+  return new BaseResponse(StatusCodes.OK, politicianNames);
+};
+
+const getHoldings: ExpressHandler<
+  { params: { stock: string } } & Request
+> = async (req) => {};
+
+export { tracker, getTopPoliticians, getHoldings };

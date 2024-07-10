@@ -7,18 +7,28 @@ import { routes } from "../router";
 const api: ApiDictionary = {
   GET: [
     {
-      name: "video",
-      description: "media",
+      name: "sse",
+      description: "Server Sent Events base API",
       version: 1,
       roles: [],
     },
     {
-      name: "download",
-      description: "scrape website (custom)",
+      name: "test",
+      description: "notion pages",
       version: 1,
+      rootPath: "sse",
+      options: {
+        sse: true,
+      },
       roles: [],
-      rootPath: "video",
-      controller: controller.downloadM3U8,
+      controller: controller.testApi,
+    },
+    {
+      name: "test2",
+      description: "notion pages",
+      version: 1,
+      rootPath: "test",
+      roles: [],
     },
   ],
   POST: [],

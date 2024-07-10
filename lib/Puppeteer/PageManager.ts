@@ -14,6 +14,12 @@ class PageManager extends Scrapper {
     const res = await got(url);
     await this.#page.goto(res.url, options);
   };
+
+  findM3U8Url = async (url: string) => {
+    const urlLink = await this.intercept(url);
+    console.log(urlLink);
+    return urlLink;
+  };
 }
 
 export default PageManager;

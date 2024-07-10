@@ -1,4 +1,8 @@
-import puppeteer, { Browser, GoToOptions } from "puppeteer";
+import puppeteer, {
+  Browser,
+  GoToOptions,
+  PuppeteerLaunchOptions,
+} from "puppeteer";
 import BrowserDriver from "./BrowserDriver";
 
 type viewport = {
@@ -14,8 +18,8 @@ class BrowserManager {
     this.#browserDriver = browserDriver;
   }
 
-  openBrowser = async () => {
-    this.#browser = await this.#browserDriver.launch();
+  openBrowser = async (options?: PuppeteerLaunchOptions) => {
+    this.#browser = await this.#browserDriver.launch(options);
   };
 
   createPage = async (viewport?: viewport) => {
@@ -32,6 +36,13 @@ class BrowserManager {
 
   closeBrowser = async () => {
     await this.#browserDriver.close();
+  };
+
+  getPages = async () => {
+    if (!this.#browser?.connected) {
+      throw new Error("Browser not initialized. Call openBrowser first.");
+    }
+    return await this.#browser.pages();
   };
 }
 

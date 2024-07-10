@@ -1,30 +1,27 @@
 import dayjs from "dayjs";
 import { StatusCodes } from "http-status-codes";
 import BaseResponse from "../lib/classes/BaseResponse";
+import sse from "../lib/decorator/sse";
+import { ExpressHandler } from "../lib/ts/api.interface";
 
-export { testApi };
+const testApi: ExpressHandler = (req, res, next) => {
+  // Function to send a message
+  const sendEvent = (data) => {
+    res.write(`data: ${JSON.stringify(data)}\n\n`);
+  };
 
-const testApi = (req: any, res: any, next: any) => {
-  //   console.log(getRoute());
-  res.writeHead(200, {
-    "Content-Type": "text/event-stream",
-    "Cache-Control": "no-cache",
-    Connection: "keep-alive",
+  // Send an event every 5 seconds
+  const intervalId = setInterval(() => {
+    sendEvent({ time: new Date().toTimeString() });
+  }, 5000);
+
+  res.on("close", () => {
+    clearInterval(intervalId);
+    res.end();
   });
-  return sendAndSleep(res, 5);
 
   //   const newData = "hi";
   //   return new BaseResponse(StatusCodes.OK, newData);
 };
-var sendAndSleep = function (response, counter) {
-  if (counter > 10) {
-    response.end();
-  } else {
-    response.write(" ;i=" + counter);
-    console.log(counter);
-    counter++;
-    setTimeout(function () {
-      sendAndSleep(response, counter);
-    }, 1000);
-  }
-};
+
+export { testApi };
